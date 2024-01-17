@@ -1,23 +1,25 @@
-import { promises as fs } from 'node:fs'
+import fs, { promises as fsp } from 'node:fs'
 import path from 'node:path'
+import { promisify } from 'node:util'
 import git from 'simple-git'
+import ncp from 'ncp'
 import { log, r } from './utils'
 
 const localPath = r('icons')
+const tempPath = r('.temp')
 
-async function retainIcons(iconsFolder: string): Promise<void> {
-  const icons = await fs.readdir(localPath)
+const copy = promisify(ncp)
+const remove = async (path: string) => await fsp.rm(path, { recursive: true, force: true })
 
-  await Promise.all(icons.map(async (icon) => {
-    if (icon !== iconsFolder)
-      await fs.rm(path.join(localPath, icon), { recursive: true, force: true })
-  }))
-}
-
-export async function downloadAllIcons(url: string, iconsFolder: string): Promise<void> {
-  const gitInstance = git()
+export async function cloneAndCopyIcons(url: string, iconsFolder: string): Promise<void> {
   log('PRE', 'clone repo with icons')
-  await gitInstance.clone(url, localPath)
+  const gitInstance = git()
+  await gitInstance.clone(url, tempPath)
+
   log('PRE', 'clean up unnecessary files')
-  await retainIcons(iconsFolder)
+  if (fs.existsSync(localPath))
+    await remove(localPath)
+
+  await copy(path.join(tempPath, iconsFolder), localPath)
+  await remove(tempPath)
 }

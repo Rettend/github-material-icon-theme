@@ -46,6 +46,6 @@ function getManifest(): Manifest.WebExtensionManifest {
 }
 
 export async function writeManifest() {
-  await fs.writeJSON(r('extension/manifest.json'), getManifest(), { spaces: 2 })
   log('PRE', 'write manifest.json')
+  await fs.writeJSON(r('extension/manifest.json'), getManifest(), { spaces: 2 })
 }
