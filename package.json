@@ -1,0 +1,56 @@
+{
+  "name": "github-material-icon-theme",
+  "type": "module",
+  "version": "0.0.1",
+  "packageManager": "pnpm@8.13.1",
+  "description": "[description]",
+  "author": "Rettend",
+  "license": "MIT",
+  "homepage": "https://github.com/Rettend/github-material-icon-theme#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rettend/github-material-icon-theme.git"
+  },
+  "bugs": "https://github.com/Rettend/github-material-icon-theme/issues",
+  "keywords": [
+    "github",
+    "vscode",
+    "material",
+    "icon",
+    "theme"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./extension/dist/index.mjs"
+    }
+  },
+  "files": [
+    "extension"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "dev": "unbuild --stub",
+    "pre": "tsx scripts/index.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "release": "bumpp && unbuild && pnpm publish"
+  },
+  "dependencies": {
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.6.2",
+    "@types/fs-extra": "^11.0.4",
+    "@types/webextension-polyfill": "^0.10.7",
+    "bumpp": "^9.2.1",
+    "eslint": "^8.56.0",
+    "fs-extra": "^11.2.0",
+    "kolorist": "^1.8.0",
+    "node-fetch": "^3.3.2",
+    "simple-git": "^3.22.0",
+    "tsx": "^4.7.0",
+    "unbuild": "^2.0.0"
+  }
+}
