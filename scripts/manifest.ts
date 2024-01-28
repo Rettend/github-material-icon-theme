@@ -1,41 +1,35 @@
 import type { Manifest } from 'webextension-polyfill'
-import fs from 'fs-extra'
 import pkg from '../package.json' assert { type: 'json' }
-import { log, r } from './utils'
 
-export const urls = [
+const urls = [
   'https://github.com/*',
 ]
 
-function getManifest(): Manifest.WebExtensionManifest {
+export function getManifest(): Manifest.WebExtensionManifest {
   return {
     manifest_version: 3,
     name: pkg.name,
     version: pkg.version,
     description: pkg.description,
     action: {
-      default_icon: './assets/icon-512.png',
-    },
-    background: {
-      service_worker: './dist/index.js',
+      default_icon: './logo.png',
     },
     icons: {
-      16: './assets/icon-512.png',
-      48: './assets/icon-512.png',
-      128: './assets/icon-512.png',
+      16: './logo.png',
+      48: './logo.png',
+      128: './logo.png',
     },
     permissions: [],
     content_scripts: [
       {
         matches: urls,
-        js: [
-          'dist/index.js',
-        ],
+        js: ['index.mjs'],
+        css: ['style.css'],
       },
     ],
     web_accessible_resources: [
       {
-        resources: ['dist/style.css'],
+        resources: ['style.css'],
         matches: urls,
       },
     ],
@@ -43,9 +37,4 @@ function getManifest(): Manifest.WebExtensionManifest {
       extension_pages: 'script-src \'self\'; object-src \'self\'',
     },
   }
-}
-
-export async function writeManifest() {
-  log('PRE', 'write manifest.json')
-  await fs.writeJSON(r('extension/manifest.json'), getManifest(), { spaces: 2 })
 }

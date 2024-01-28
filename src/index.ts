@@ -1,69 +1,62 @@
-import fs from 'node:fs'
-import { glob } from 'glob'
-import { convertParsedSVG, encodeSvgForCss, parseSVGContent } from '@iconify/utils'
+import { fileExtensions, fileNames } from 'material-icon-theme/dist/material-icons.json'
+import { fileExtensions as languageFileExtensions } from './language-map.json'
 
-const folders = [
-  'assets',
-  // 'icons',
-]
+function getIconClass(fileName: string | null | undefined) {
+  fileName = fileName?.toLowerCase()
 
-async function loadAndParseSVGs(folders: string[]): Promise<void> {
-  const files = folders.map(async (folder) => {
-    return await glob(`./${folder}/**/*.svg`)
+  const iconClass = fileNames[fileName as keyof typeof fileNames]
+  if (iconClass)
+    return `ICON_${iconClass}`
+
+  let extension = fileName?.split('.').slice(1).join('.')
+  const extensionIconClass = fileExtensions[extension as keyof typeof fileExtensions]
+  if (extensionIconClass)
+    return `ICON_${extensionIconClass}`
+
+  extension = fileName?.split('.')?.pop()
+  const languageIconClass = languageFileExtensions[extension as keyof typeof languageFileExtensions]
+  if (languageIconClass)
+    return `ICON_${languageIconClass}`
+
+  return `ICON_file`
+}
+
+const processedMainFileNames: Set<Element> = new Set()
+const processedTreeFileNames: Set<Element> = new Set()
+
+type SvgFn = (element: Element) => SVGSVGElement | null | undefined
+
+function processFileNames(fileNames: NodeListOf<Element>, processedFileNames: Set<Element>, svgFn: SvgFn) {
+  fileNames.forEach((fileNameElement) => {
+    if (processedFileNames.has(fileNameElement))
+      return
+
+    const fileName = fileNameElement.textContent
+    const iconClass = getIconClass(fileName)
+
+    const svgElement = svgFn(fileNameElement)
+    if (iconClass)
+      svgElement?.classList.add(iconClass)
+
+    processedFileNames.add(fileNameElement)
   })
-
-  const allFiles = (await Promise.all(files)).flat()
-
-  for (const file of allFiles) {
-    const content = await fs.promises.readFile(file, 'utf-8')
-    const parsed = parseSVGContent(content)
-
-    if (!parsed)
-      return
-
-    const svg = convertParsedSVG(parsed)
-
-    if (!svg)
-      return
-
-    const cssProps = getCSS(svg.body)
-
-    const css = Object.entries(cssProps).map(([key, value]) => {
-      return `${key}: ${value};`
-    }).join('\n')
-  }
 }
 
-function getCSS(svg: string): Record<string, string> {
-  const mode = svg.includes('currentColor')
-    ? 'mask'
-    : 'background-img'
+function callback() {
+  const mainFileNames = document.querySelectorAll('.react-directory-truncate a')
+  const mainSvgFn: SvgFn = element =>
+    element.closest('div.react-directory-filename-column')
+      ?.querySelector('svg')
+  processFileNames(mainFileNames, processedMainFileNames, mainSvgFn)
 
-  const uri = `url("data:image/svg+xml;utf8,${encodeSvgForCss(svg)}")`
-
-  // monochrome
-  if (mode === 'mask') {
-    return {
-      'mask': `${uri} no-repeat`,
-      'mask-size': '100% 100%',
-      '-webkit-mask': `${uri} no-repeat`,
-      '-webkit-mask-size': '100% 100%',
-      'background-color': 'currentColor',
-      'color': 'inherit',
-      'height': '1em',
-      'width': '1em',
-    }
-  }
-  // colored
-  else {
-    return {
-      'background': `${uri} no-repeat`,
-      'background-size': '100% 100%',
-      'background-color': 'transparent',
-      'height': '1em',
-      'width': '1em',
-    }
-  }
+  const treeFileNames = document.querySelectorAll('li.PRIVATE_TreeView-item')
+  const treeSvgFn: SvgFn = element =>
+    element.querySelector('div.PRIVATE_TreeView-item-container')
+      ?.querySelector('div.PRIVATE_TreeView-item-content')
+      ?.querySelector('div.PRIVATE_TreeView-item-visual')
+      ?.querySelector('svg')
+  processFileNames(treeFileNames, processedTreeFileNames, treeSvgFn)
 }
 
-loadAndParseSVGs(folders)
+const observer = new MutationObserver(callback)
+observer.observe(document.body, { childList: true, subtree: true })

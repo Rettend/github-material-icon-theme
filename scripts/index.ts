@@ -1,8 +1,10 @@
-import { writeManifest } from './manifest'
-import { cloneAndCopyIcons } from './icons'
+import fs from 'fs-extra'
+import { log, r } from '../utils/utils'
+import { getManifest } from './manifest'
+import { generateCSS } from './css'
 
-const repoUrl = 'https://github.com/PKief/vscode-material-icon-theme.git'
-const iconsFolder = 'icons'
+log('PRE', 'write manifest.json')
+fs.writeJSON(r('extension/manifest.json'), getManifest(), { spaces: 2 })
 
-writeManifest()
-cloneAndCopyIcons(repoUrl, iconsFolder)
+log('PRE', 'generate css')
+generateCSS(r('extension/style.css'))

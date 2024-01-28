@@ -1,21 +1,17 @@
 import { defineBuildConfig } from 'unbuild'
+import { run } from './utils/utils'
 
 export default defineBuildConfig({
+  hooks: {
+    'build:before': async () => {
+      await run('pnpm run pre')
+    },
+  },
   entries: [
-    'src/index',
+    'src/index.ts',
+    { input: 'extension/' },
   ],
-  outDir: 'extension/dist',
-  externals: [
-    'fs-extra',
-    'kolorist',
-    'universalify',
-    'graceful-fs',
-    'jsonfile',
-    'jsonfile/utils',
-    'glob',
-    '@iconify/utils',
-    'debug',
-    'ms',
-    'has-flag',
-  ],
+  rollup: {
+    inlineDependencies: true,
+  },
 })

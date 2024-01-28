@@ -1,18 +1,15 @@
 {
   "manifest_version": 3,
   "name": "github-material-icon-theme",
-  "version": "0.0.1",
+  "version": "4.33.0",
   "description": "[description]",
   "action": {
-    "default_icon": "./assets/icon-512.png"
-  },
-  "background": {
-    "service_worker": "./dist/index.js"
+    "default_icon": "./logo.png"
   },
   "icons": {
-    "16": "./assets/icon-512.png",
-    "48": "./assets/icon-512.png",
-    "128": "./assets/icon-512.png"
+    "16": "./logo.png",
+    "48": "./logo.png",
+    "128": "./logo.png"
   },
   "permissions": [],
   "content_scripts": [
@@ -21,14 +18,17 @@
         "https://github.com/*"
       ],
       "js": [
-        "dist/index.js"
+        "index.mjs"
+      ],
+      "css": [
+        "style.css"
       ]
     }
   ],
   "web_accessible_resources": [
     {
       "resources": [
-        "dist/style.css"
+        "style.css"
       ],
       "matches": [
         "https://github.com/*"
