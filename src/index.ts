@@ -1,7 +1,7 @@
-import { fileExtensions, fileNames } from 'material-icon-theme/dist/material-icons.json'
+import { fileExtensions, fileNames, folderNames, folderNamesExpanded } from 'material-icon-theme/dist/material-icons.json'
 import { fileExtensions as languageFileExtensions } from './language-map.json'
 
-function getIconClass(fileName: string | null | undefined) {
+function getFileClass(fileName: string | null | undefined) {
   fileName = fileName?.toLowerCase()
 
   const iconClass = fileNames[fileName as keyof typeof fileNames]
@@ -14,11 +14,26 @@ function getIconClass(fileName: string | null | undefined) {
     return `ICON_${extensionIconClass}`
 
   extension = fileName?.split('.')?.pop()
-  const languageIconClass = languageFileExtensions[extension as keyof typeof languageFileExtensions]
+  let languageIconClass = languageFileExtensions[extension as keyof typeof languageFileExtensions]
   if (languageIconClass)
     return `ICON_${languageIconClass}`
 
-  return `ICON_file`
+  languageIconClass = fileExtensions[extension as keyof typeof fileExtensions]
+  if (languageIconClass)
+    return `ICON_${languageIconClass}`
+
+  return `default`
+}
+
+function getFolderClass(fileName: string | null | undefined, isOpen: boolean) {
+  fileName = fileName?.toLowerCase()
+
+  const folderMap = isOpen ? folderNamesExpanded : folderNames
+  const iconClass = folderMap[fileName as keyof typeof folderMap]
+  if (iconClass)
+    return `ICON_${iconClass}`
+
+  return `default`
 }
 
 const processedMainFileNames: Set<Element> = new Set()
@@ -32,9 +47,18 @@ function processFileNames(fileNames: NodeListOf<Element>, processedFileNames: Se
       return
 
     const fileName = fileNameElement.textContent
-    const iconClass = getIconClass(fileName)
-
     const svgElement = svgFn(fileNameElement)
+
+    let iconClass: string | undefined
+    if (svgElement?.classList.contains('icon-directory'))
+      iconClass = getFolderClass(fileName, false)
+    else if (svgElement?.classList.contains('octicon-file-directory-fill'))
+      iconClass = getFolderClass(fileName, false)
+    else if (svgElement?.classList.contains('octicon-file-directory-open-fill'))
+      iconClass = getFolderClass(fileName, true)
+    else
+      iconClass = getFileClass(fileName)
+
     if (iconClass)
       svgElement?.classList.add(iconClass)
 
@@ -43,7 +67,7 @@ function processFileNames(fileNames: NodeListOf<Element>, processedFileNames: Se
 }
 
 function callback() {
-  const mainFileNames = document.querySelectorAll('.react-directory-truncate a')
+  const mainFileNames = document.querySelectorAll('div.react-directory-truncate a')
   const mainSvgFn: SvgFn = element =>
     element.closest('div.react-directory-filename-column')
       ?.querySelector('svg')
