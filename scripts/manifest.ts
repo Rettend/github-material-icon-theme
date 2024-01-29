@@ -4,16 +4,12 @@ import pkg from '../package.json' assert { type: 'json' }
 const urls = [
   'https://github.com/*',
 ]
-
-export function getManifest(): Manifest.WebExtensionManifest {
-  return {
-    manifest_version: 3,
+export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
+  const manifest: Manifest.WebExtensionManifest = {
+    manifest_version: isFirefox ? 2 : 3,
     name: pkg.name,
     version: pkg.version,
     description: pkg.description,
-    action: {
-      default_icon: './logo.png',
-    },
     icons: {
       16: './logo.png',
       48: './logo.png',
@@ -27,14 +23,33 @@ export function getManifest(): Manifest.WebExtensionManifest {
         css: ['style.css'],
       },
     ],
-    web_accessible_resources: [
+  }
+
+  if (isFirefox) {
+    manifest.browser_action = {
+      default_icon: './logo.png',
+    }
+    manifest.browser_specific_settings = {
+      gecko: {
+        id: 'github@materialicontheme.com',
+        strict_min_version: '48.0',
+      },
+    }
+  }
+  else {
+    manifest.action = {
+      default_icon: './logo.png',
+    }
+    manifest.content_security_policy = {
+      extension_pages: 'script-src \'self\'; object-src \'self\'',
+    }
+    manifest.web_accessible_resources = [
       {
         resources: ['style.css'],
         matches: urls,
       },
-    ],
-    content_security_policy: {
-      extension_pages: 'script-src \'self\'; object-src \'self\'',
-    },
+    ]
   }
+
+  return manifest
 }
