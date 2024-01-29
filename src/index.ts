@@ -38,24 +38,21 @@ function getFolderClass(fileName: string | null | undefined, isOpen: boolean) {
 
 const processedMainFileNames: Set<Element> = new Set()
 const processedTreeFileNames: Set<Element> = new Set()
+const processedTreeFolders: Map<Element, boolean> = new Map()
 
 type SvgFn = (element: Element) => SVGSVGElement | null | undefined
 
-function processFileNames(fileNames: NodeListOf<Element>, processedFileNames: Set<Element>, svgFn: SvgFn) {
+function processFileNames(fileNames: NodeListOf<Element>, processedFileNames: Set<Element>, svgFn: SvgFn, processedTreeFolders?: Map<Element, boolean>) {
   fileNames.forEach((fileNameElement) => {
-    if (processedFileNames.has(fileNameElement))
+    if (processedTreeFolders?.has(fileNameElement) || processedFileNames.has(fileNameElement))
       return
 
     const fileName = fileNameElement.textContent
     const svgElement = svgFn(fileNameElement)
-
     let iconClass: string | undefined
+
     if (svgElement?.classList.contains('icon-directory'))
       iconClass = getFolderClass(fileName, false)
-    else if (svgElement?.classList.contains('octicon-file-directory-fill'))
-      iconClass = getFolderClass(fileName, false)
-    else if (svgElement?.classList.contains('octicon-file-directory-open-fill'))
-      iconClass = getFolderClass(fileName, true)
     else
       iconClass = getFileClass(fileName)
 
@@ -66,6 +63,27 @@ function processFileNames(fileNames: NodeListOf<Element>, processedFileNames: Se
   })
 }
 
+function processFolderNames(folderNames: NodeListOf<Element>, processedFolderNames: Map<Element, boolean>, svgFn: SvgFn) {
+  folderNames.forEach((folderNameElement) => {
+    const svgElement = svgFn(folderNameElement)
+    const isOpen = svgElement?.classList.contains('octicon-file-directory-open-fill')
+
+    if (isOpen === undefined)
+      return
+
+    if (processedFolderNames.has(folderNameElement) && isOpen === processedFolderNames.get(folderNameElement))
+      return
+
+    const folderName = folderNameElement.textContent
+    const iconClass = getFolderClass(folderName, isOpen)
+
+    if (iconClass)
+      svgElement?.classList.add(iconClass)
+
+    processedFolderNames.set(folderNameElement, isOpen)
+  })
+}
+
 function callback() {
   const mainFileNames = document.querySelectorAll('div.react-directory-truncate a')
   const mainSvgFn: SvgFn = element =>
@@ -73,13 +91,19 @@ function callback() {
       ?.querySelector('svg')
   processFileNames(mainFileNames, processedMainFileNames, mainSvgFn)
 
-  const treeFileNames = document.querySelectorAll('li.PRIVATE_TreeView-item')
+  const treeFolderNames = document.querySelectorAll('span.PRIVATE_TreeView-item-content-text span')
+  const treeFolderSvgFn: SvgFn = element =>
+    element.closest('div.PRIVATE_TreeView-item-content')
+      ?.querySelector('div.PRIVATE_TreeView-directory-icon')
+      ?.querySelector('svg')
+  processFolderNames(treeFolderNames, processedTreeFolders, treeFolderSvgFn)
+
+  const treeFileNames = document.querySelectorAll('span.PRIVATE_TreeView-item-content-text span')
   const treeSvgFn: SvgFn = element =>
-    element.querySelector('div.PRIVATE_TreeView-item-container')
-      ?.querySelector('div.PRIVATE_TreeView-item-content')
+    element.closest('div.PRIVATE_TreeView-item-content')
       ?.querySelector('div.PRIVATE_TreeView-item-visual')
       ?.querySelector('svg')
-  processFileNames(treeFileNames, processedTreeFileNames, treeSvgFn)
+  processFileNames(treeFileNames, processedTreeFileNames, treeSvgFn, processedTreeFolders)
 }
 
 const observer = new MutationObserver(callback)
