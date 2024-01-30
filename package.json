@@ -34,7 +34,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
-    "release": "bumpp && unbuild && pnpm publish"
+    "release": "bumpp"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.6.2",
