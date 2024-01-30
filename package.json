@@ -4,7 +4,7 @@
   "version": "4.33.0",
   "private": true,
   "packageManager": "pnpm@8.15.0",
-  "description": "[description]",
+  "description": "vscode-material-icon-theme for GitHub",
   "author": "Rettend",
   "license": "MIT",
   "homepage": "https://github.com/Rettend/github-material-icon-theme#readme",
@@ -20,7 +20,6 @@
     "icon",
     "theme"
   ],
-  "exports": "./dist/index.mjs",
   "files": [
     "dist"
   ],

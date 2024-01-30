@@ -19,7 +19,7 @@ export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
     content_scripts: [
       {
         matches: urls,
-        js: ['index.mjs'],
+        js: ['index.js'],
         css: ['style.css'],
       },
     ],
