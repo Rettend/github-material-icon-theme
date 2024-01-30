@@ -11,9 +11,9 @@ Currently only supports GitHub and dark theme.
 
 ## Download
 
-### Chrome
+### Chromium
 
-Install zip from the Release tab, then load the extension from `chrome://extensions/` by clicking `Load unpacked`. (sorry, no Chrome Web Store that would be $5)
+Install zip from the Release tab, unzip, then load the extension from `chrome://extensions/` by clicking `Load unpacked`. (sorry, no Chrome Web Store that would be $5)
 
 ### Firefox
 

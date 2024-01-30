@@ -34,9 +34,9 @@ function getCSS(svg: string): Record<string, string> {
 
 export async function generateCSS(outputPath: string): Promise<void> {
   const commonCss = `
-.react-directory-filename-column > svg:not(.default), 
-.PRIVATE_TreeView-directory-icon > svg:not(.default), 
-.PRIVATE_TreeView-item-visual > svg:not(.default) {
+.react-directory-filename-column > svg, 
+.PRIVATE_TreeView-directory-icon > svg, 
+.PRIVATE_TreeView-item-visual > svg {
   height: 1.35em;
   width: 1.35em;
   color: transparent !important;

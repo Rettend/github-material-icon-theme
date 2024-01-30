@@ -1,7 +1,7 @@
 
-.react-directory-filename-column > svg:not(.default), 
-.PRIVATE_TreeView-directory-icon > svg:not(.default), 
-.PRIVATE_TreeView-item-visual > svg:not(.default) {
+.react-directory-filename-column > svg, 
+.PRIVATE_TreeView-directory-icon > svg, 
+.PRIVATE_TreeView-item-visual > svg {
   height: 1.35em;
   width: 1.35em;
   color: transparent !important;

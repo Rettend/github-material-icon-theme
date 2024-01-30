@@ -22,7 +22,7 @@ function getFileClass(fileName: string | null | undefined) {
   if (languageIconClass)
     return `ICON_${languageIconClass}`
 
-  return `default`
+  return 'ICON_file'
 }
 
 function getFolderClass(fileName: string | null | undefined, isOpen: boolean) {
@@ -33,7 +33,10 @@ function getFolderClass(fileName: string | null | undefined, isOpen: boolean) {
   if (iconClass)
     return `ICON_${iconClass}`
 
-  return `default`
+  if (isOpen)
+    return 'ICON_folder-open'
+  else
+    return 'ICON_folder'
 }
 
 const processedMainFileNames: Set<Element> = new Set()
@@ -47,12 +50,16 @@ function processFileNames(fileNames: NodeListOf<Element>, processedFileNames: Se
     if (processedTreeFolders?.has(fileNameElement) || processedFileNames.has(fileNameElement))
       return
 
+    let iconClass: string | undefined
+
     const fileName = fileNameElement.textContent
     const svgElement = svgFn(fileNameElement)
-    let iconClass: string | undefined
+    const isSubmodule = fileNameElement?.hasAttribute('style')
 
     if (svgElement?.classList.contains('icon-directory'))
       iconClass = getFolderClass(fileName, false)
+    else if (isSubmodule)
+      iconClass = 'ICON_folder'
     else
       iconClass = getFileClass(fileName)
 
