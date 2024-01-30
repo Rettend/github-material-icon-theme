@@ -9,6 +9,20 @@ It uses pure CSS icons so it's fast.
 
 Currently only supports GitHub and dark theme.
 
+## Download
+
+### Chrome
+
+Install zip from the Release tab, then load the extension from `chrome://extensions/` by clicking `Load unpacked`. (sorry, no Chrome Web Store that would be $5)
+
+### Firefox
+
+[Install from Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/github-material-icon-theme/)
+
+### Edge
+
+Soon™️
+
 ## Credits
 
 - [vscode-material-icon-theme](https://github.com/PKief/vscode-material-icon-theme) for the amazing icon collection
