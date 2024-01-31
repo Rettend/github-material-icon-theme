@@ -5,30 +5,10 @@ import data from 'material-icon-theme/dist/material-icons.json'
 import { r } from '../utils/utils'
 
 function getCSS(svg: string): Record<string, string> {
-  const mode = svg.includes('currentColor')
-    ? 'mask'
-    : 'background-img'
-
   const uri = `url("data:image/svg+xml;utf8,${encodeSvgForCss(svg)}")`
 
-  // monochrome
-  if (mode === 'mask') {
-    return {
-      'mask': `${uri} no-repeat`,
-      'mask-size': '100% 100%',
-      '-webkit-mask': `${uri} no-repeat`,
-      '-webkit-mask-size': '100% 100%',
-      'background-color': 'currentColor',
-      'color': 'inherit',
-    }
-  }
-  // colored
-  else {
-    return {
-      'background': `${uri} no-repeat`,
-      'background-size': '100% 100%',
-      'background-color': 'transparent',
-    }
+  return {
+    background: `${uri} no-repeat`,
   }
 }
 
@@ -37,6 +17,8 @@ export async function generateCSS(outputPath: string): Promise<void> {
 .react-directory-filename-column > svg, 
 .PRIVATE_TreeView-directory-icon > svg, 
 .PRIVATE_TreeView-item-visual > svg {
+  background-size: 100% 100%;
+  background-color: transparent;
   height: 1.35em;
   width: 1.35em;
   color: transparent !important;
