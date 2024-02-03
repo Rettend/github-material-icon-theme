@@ -21,7 +21,7 @@ Install zip from the Release tab, unzip, then load the extension from `chrome://
 
 ### Edge
 
-Soon™️
+[Install from Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/githubmaterialiconthem/mladkedehngimbnkhcbjamaldmjcneaa)
 
 ## Credits
 
