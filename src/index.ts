@@ -1,42 +1,55 @@
-import { fileExtensions, fileNames, folderNames, folderNamesExpanded } from 'material-icon-theme/dist/material-icons.json'
+import { fileExtensions, fileNames, folderNames, folderNamesExpanded, light } from 'material-icon-theme/dist/material-icons.json'
 import { fileExtensions as languageFileExtensions } from './language-map.json'
 
-function getFileClass(fileName: string | null | undefined) {
-  fileName = fileName?.toLowerCase()
+const isLightMode = document.documentElement.getAttribute('data-color-mode') === 'light'
 
-  const iconClass = fileNames[fileName as keyof typeof fileNames]
-  if (iconClass)
-    return `ICON_${iconClass}`
+interface LookupPair { key: string, lookup: Record<string, string> | undefined }
 
-  let extension = fileName?.split('.').slice(1).join('.')
-  const extensionIconClass = fileExtensions[extension as keyof typeof fileExtensions]
-  if (extensionIconClass)
-    return `ICON_${extensionIconClass}`
-
-  extension = fileName?.split('.')?.pop()
-  let languageIconClass = languageFileExtensions[extension as keyof typeof languageFileExtensions]
-  if (languageIconClass)
-    return `ICON_${languageIconClass}`
-
-  languageIconClass = fileExtensions[extension as keyof typeof fileExtensions]
-  if (languageIconClass)
-    return `ICON_${languageIconClass}`
-
-  return 'ICON_file'
+function getIconClass(pairs: LookupPair[]) {
+  for (const pair of pairs) {
+    if (pair.lookup) {
+      const iconClass = pair.lookup[pair.key]
+      if (iconClass)
+        return `ICON_${iconClass}`
+    }
+  }
 }
 
-function getFolderClass(fileName: string | null | undefined, isOpen: boolean) {
-  fileName = fileName?.toLowerCase()
+function getFileClass(fileName: string | undefined) {
+  if (!fileName)
+    return
+
+  fileName = fileName.toLowerCase()
+  const longExtension = fileName.split('.').slice(1).join('.')
+  const shortExtension = fileName.split('.').pop() || ''
+
+  const pairs: LookupPair[] = [
+    { key: fileName, lookup: isLightMode ? light.fileNames : undefined },
+    { key: fileName, lookup: fileNames },
+    { key: longExtension, lookup: isLightMode ? light.fileExtensions : undefined },
+    { key: longExtension, lookup: fileExtensions },
+    { key: shortExtension, lookup: fileExtensions },
+    { key: shortExtension, lookup: languageFileExtensions },
+  ]
+
+  return getIconClass(pairs)
+}
+
+function getFolderClass(fileName: string | undefined, isOpen: boolean) {
+  if (!fileName)
+    return
+
+  fileName = fileName.toLowerCase()
 
   const folderMap = isOpen ? folderNamesExpanded : folderNames
-  const iconClass = folderMap[fileName as keyof typeof folderMap]
-  if (iconClass)
-    return `ICON_${iconClass}`
+  const lightFolderMap = isOpen ? light.folderNamesExpanded : light.folderNames
 
-  if (isOpen)
-    return 'ICON_folder-open'
-  else
-    return 'ICON_folder'
+  const pairs: LookupPair[] = [
+    { key: fileName, lookup: isLightMode ? lightFolderMap : undefined },
+    { key: fileName, lookup: folderMap },
+  ]
+
+  return getIconClass(pairs)
 }
 
 const processedMainFileNames: Set<Element> = new Set()
@@ -52,19 +65,18 @@ function processFileNames(fileNames: NodeListOf<Element>, processedFileNames: Se
 
     let iconClass: string | undefined
 
-    const fileName = fileNameElement.textContent
+    const fileName = fileNameElement.textContent ?? undefined
     const svgElement = svgFn(fileNameElement)
     const isSubmodule = fileNameElement?.hasAttribute('style')
 
-    if (svgElement?.classList.contains('icon-directory'))
-      iconClass = getFolderClass(fileName, false)
-    else if (isSubmodule)
+    if (isSubmodule)
       iconClass = 'ICON_folder'
+    else if (svgElement?.classList.contains('icon-directory'))
+      iconClass = getFolderClass(fileName, false) || 'ICON_folder'
     else
-      iconClass = getFileClass(fileName)
+      iconClass = getFileClass(fileName) || 'ICON_file'
 
-    if (iconClass)
-      svgElement?.classList.add(iconClass)
+    svgElement?.classList.add(iconClass)
 
     processedFileNames.add(fileNameElement)
   })
@@ -81,8 +93,8 @@ function processFolderNames(folderNames: NodeListOf<Element>, processedFolderNam
     if (processedFolderNames.has(folderNameElement) && isOpen === processedFolderNames.get(folderNameElement))
       return
 
-    const folderName = folderNameElement.textContent
-    const iconClass = getFolderClass(folderName, isOpen)
+    const folderName = folderNameElement.textContent ?? undefined
+    const iconClass = getFolderClass(folderName, isOpen) || (isOpen ? 'ICON_folder-open' : 'ICON_folder')
 
     if (iconClass)
       svgElement?.classList.add(iconClass)
