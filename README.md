@@ -14,7 +14,7 @@ Currently only supports GitHub.
 
 ### Chromium
 
-Install zip from the Release tab, unzip, then load the extension from `chrome://extensions/` by clicking `Load unpacked`. (sorry, no Chrome Web Store that would be $5)
+[Install from Chrome Web Store](https://chromewebstore.google.com/detail/github-material-icon-them/hlgcfologjgpkkkokemkclndckfbbphb)
 
 ### Firefox
 
