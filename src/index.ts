@@ -58,6 +58,7 @@ const processedTreeFolders: Map<Element, boolean> = new Map()
 
 type SvgFn = (element: Element) => SVGSVGElement | null | undefined
 
+// also processes main-view folders (as they cannot be opened)
 function processFileNames(fileNames: NodeListOf<Element>, processedFileNames: Set<Element>, svgFn: SvgFn, processedTreeFolders?: Map<Element, boolean>) {
   fileNames.forEach((fileNameElement) => {
     if (processedTreeFolders?.has(fileNameElement) || processedFileNames.has(fileNameElement))
@@ -103,7 +104,18 @@ function processFolderNames(folderNames: NodeListOf<Element>, processedFolderNam
   })
 }
 
+function processExtraIcons() {
+  const extraFolderIcon = document.querySelector('#folder-row-0 svg')
+  if (extraFolderIcon && !processedMainFileNames.has(extraFolderIcon)) {
+    extraFolderIcon.classList.add('ICON_folder')
+    processedMainFileNames.add(extraFolderIcon)
+  }
+}
+
 function callback() {
+  processExtraIcons()
+
+  // main-view files and folders are technically the same
   const mainFileNames = document.querySelectorAll('div.react-directory-truncate a')
   const mainSvgFn: SvgFn = element =>
     element.closest('div.react-directory-filename-column')
