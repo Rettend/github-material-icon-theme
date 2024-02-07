@@ -34,7 +34,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
-    "release": "pnpm run build && pnpm run bundle && pnpm run build:firefox && pnpm run bundle:firefox && bumpp"
+    "release": "bumpp && pnpm run build && pnpm run bundle && pnpm run build:firefox && pnpm run bundle:firefox"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.6.4",
