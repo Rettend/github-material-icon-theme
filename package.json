@@ -3,7 +3,7 @@
   "type": "module",
   "version": "4.34.0",
   "private": true,
-  "packageManager": "pnpm@8.15.0",
+  "packageManager": "pnpm@8.15.5",
   "description": "vscode-material-icon-theme for GitHub",
   "author": "Rettend",
   "license": "MIT",
@@ -31,8 +31,7 @@
     "gen:languages": "tsx scripts/languages.js",
     "bundle": "web-ext build --source-dir dist --artifacts-dir zip --overwrite-dest",
     "bundle:firefox": "web-ext build --source-dir dist --artifacts-dir zip/firefox --overwrite-dest",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint . --fix",
     "typecheck": "tsc --noEmit",
     "release": "bumpp && pnpm run build && pnpm run bundle && pnpm run build:firefox && pnpm run bundle:firefox"
   },
