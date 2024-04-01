@@ -36,7 +36,7 @@
     "release": "bumpp && pnpm run build && pnpm run bundle && pnpm run build:firefox && pnpm run bundle:firefox"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.9.0",
+    "@antfu/eslint-config": "^2.11.6",
     "@iconify/utils": "^2.1.22",
     "@octokit/core": "^6.0.1",
     "@types/fs-extra": "^11.0.4",
@@ -51,7 +51,7 @@
     "kolorist": "^1.8.0",
     "material-icon-theme": "^4.34.0",
     "node-fetch": "^3.3.2",
-    "simple-git": "^3.23.0",
+    "simple-git": "^3.24.0",
     "tsx": "^4.7.1",
     "typescript": "^5.4.3",
     "unbuild": "^2.0.0",
