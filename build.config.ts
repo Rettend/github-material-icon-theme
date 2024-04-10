@@ -18,4 +18,7 @@ export default defineBuildConfig({
   rollup: {
     inlineDependencies: true,
   },
+  replace: {
+    'import.meta.vitest': 'undefined',
+  },
 })

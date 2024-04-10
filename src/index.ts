@@ -139,3 +139,48 @@ function callback() {
 
 const observer = new MutationObserver(callback)
 observer.observe(document.body, { childList: true, subtree: true })
+
+if (import.meta.vitest) {
+  const { describe, it, expect, vi, afterEach } = import.meta.vitest
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  describe('getIconClass', () => {
+    it('should return the correct icon class', () => {
+      const pairs: LookupPair[] = [
+        { key: 'test', lookup: { test: 'test' } },
+        { key: 'nothing', lookup: { notExist: 'nothing' } },
+      ]
+
+      expect(getIconClass(pairs)).toBe('ICON_test')
+    })
+  })
+
+  describe('getFileClass', () => {
+    it('should return the correct file class', () => {
+      expect(getFileClass('test.txt')).toBe('ICON_document')
+    })
+  })
+
+  describe('getFolderClass', () => {
+    it('should return the correct folder class', () => {
+      expect(getFolderClass('test', false)).toBe('ICON_folder-test')
+      expect(getFolderClass('test', true)).toBe('ICON_folder-test-open')
+    })
+  })
+
+  describe('processFileNames', () => {
+    it('should process file names correctly', () => {
+      const fileNames = document.getElementsByName('body')
+      const svgFn = vi.fn().mockImplementation(() => document.createElement('svg'))
+      const processedFileNames = new Set<Element>()
+      const processedTreeFolders = new Map<Element, boolean>()
+
+      processFileNames(fileNames, processedFileNames, svgFn, processedTreeFolders)
+
+      expect(svgFn).toHaveBeenCalledTimes(fileNames.length)
+    })
+  })
+}
