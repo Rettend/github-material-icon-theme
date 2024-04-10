@@ -4,6 +4,7 @@ import pkg from '../package.json' assert { type: 'json' }
 const urls = [
   'https://github.com/*',
 ]
+
 export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
   const manifest: Manifest.WebExtensionManifest = {
     manifest_version: isFirefox ? 2 : 3,
