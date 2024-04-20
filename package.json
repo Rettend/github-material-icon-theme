@@ -1,7 +1,7 @@
 {
   "name": "github-material-icon-theme",
   "type": "module",
-  "version": "4.34.0",
+  "version": "5.0.0",
   "private": true,
   "packageManager": "pnpm@9.0.4",
   "description": "vscode-material-icon-theme for GitHub",
