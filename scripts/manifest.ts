@@ -1,5 +1,5 @@
 import type { Manifest } from 'webextension-polyfill'
-import pkg from '../package.json' assert { type: 'json' }
+import { description, name, version } from '../package.json' assert { type: 'json' }
 
 const urls = [
   'https://github.com/*',
@@ -8,9 +8,9 @@ const urls = [
 export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
   const manifest: Manifest.WebExtensionManifest = {
     manifest_version: isFirefox ? 2 : 3,
-    name: pkg.name,
-    version: pkg.version,
-    description: pkg.description,
+    name,
+    version,
+    description,
     icons: {
       16: './logo.png',
       48: './logo.png',
