@@ -6,7 +6,7 @@ import fetch from 'node-fetch'
 import fs from 'fs-extra'
 import { Octokit } from '@octokit/core'
 import stringify from 'json-stable-stringify'
-import iconMap from 'material-icon-theme/dist/material-icons.json' assert { type: 'json' }
+import iconMap from 'material-icon-theme/dist/material-icons.json'
 import { r } from '../utils/utils'
 import 'dotenv/config'
 
@@ -92,7 +92,7 @@ async function fetchLanguageContribution(item) {
 function loadLanguageContribution([extPath, extManifest]) {
   let data
   try {
-    data = JSON.parse(extManifest.replace(/#\w+_\w+#/g, '0'))
+    data = JSON.parse(extManifest.replace(/#\w[\dA-Z]*_\w+#/gi, '0'))
   }
   catch (error) {
     throw new Error(`${error} (${extPath})`)
@@ -127,8 +127,8 @@ function processLanguageContribution(contribution) {
   }
   extensions = extensions
     .map(ext => (ext.charAt(0) === '.' ? ext.substring(1) : ext))
-    .filter(ext => !/\*|\/|\?/.test(ext))
-  filenames = filenames.filter(name => !/\*|\/|\?/.test(name))
+    .filter(ext => !/[*/?]/.test(ext))
+  filenames = filenames.filter(name => !/[*/?]/.test(name))
   if (!filenames.length && !extensions.length) {
     total -= 1
     return
@@ -163,8 +163,9 @@ function mapLanguageContribution(lang) {
       && iconName
       && languageMap.fileExtensions
       && iconMap.iconDefinitions[iconName]
-    )
+    ) {
       languageMap.fileExtensions[ext] = iconName
+    }
   })
   lang.filenames.forEach((name) => {
     const iconName = iconMap.fileNames[name] || langIcon
@@ -174,8 +175,9 @@ function mapLanguageContribution(lang) {
       && iconName
       && languageMap.fileNames
       && iconMap.iconDefinitions[iconName]
-    )
+    ) {
       languageMap.fileNames[name] = iconName
+    }
   })
 
   index += 1
