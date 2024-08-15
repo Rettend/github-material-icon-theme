@@ -8,7 +8,7 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
-    "types": ["vitest/importMeta"],
+    "types": ["vitest/importMeta", "bun"],
     "allowImportingTsExtensions": true,
     "allowJs": true,
     "strict": true,

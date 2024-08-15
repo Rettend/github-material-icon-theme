@@ -1,33 +1,24 @@
 /* eslint-disable no-console */
-import * as path from 'node:path'
-import * as process from 'node:process'
-import { exec } from 'node:child_process'
+import path from 'node:path'
+import process from 'node:process'
 import { bgCyan, black } from 'kolorist'
 
 const cwd = process.env.INIT_CWD || process.cwd()
 export const r = (file: string) => path.join(cwd, file)
 
-export function log(name: string, message: string) {
-  console.log(black(bgCyan(` ${name} `)), message)
-}
+export const logs = [
+  'PRE',
+  'POST',
+  'BUILD',
+] as const
 
-export function run(command: string) {
-  return new Promise<void>((resolve, reject) => {
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.error(error)
-        reject(error)
-        return
-      }
-      if (stderr) {
-        console.error(stderr)
-        reject(stderr)
-        return
-      }
-      if (stdout)
-        console.log(stdout)
+export type Log = typeof logs[number]
 
-      resolve()
-    })
-  })
+export function log(name: Log, message: string): void
+export function log(name: string): void
+export function log(name: string, message?: string) {
+  if (message)
+    console.log(black(bgCyan(` ${name} `)), message)
+  else
+    console.log(name)
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // from: https://github.com/Claudiohbsantos/github-material-icons-extension/blob/master/scripts/build-languages.js
 
 import path from 'node:path'
@@ -8,7 +9,6 @@ import { Octokit } from '@octokit/core'
 import stringify from 'json-stable-stringify'
 import iconMap from 'material-icon-theme/dist/material-icons.json'
 import { r } from '../utils/utils'
-import 'dotenv/config'
 
 const vsDataPath = r('data')
 const srcPath = r('src')
@@ -190,7 +190,7 @@ async function generateLanguageMap() {
   console.log('[6/7] Writing language contribution map to icon configuration file.')
   fs.writeFileSync(
     path.resolve(srcPath, 'language-map.json'),
-    stringify(languageMap, { space: '  ' }),
+    `${stringify(languageMap, { space: '  ' })}\n`,
   )
   console.log('[7/7] Deleting language contribution cache.')
   await fs.remove(vsDataPath)
