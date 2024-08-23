@@ -17,6 +17,7 @@ export default defineBuildConfig({
   entries: [
     'src/background.ts',
     'src/content.ts',
+    { input: 'extension/' },
   ],
   rollup: {
     inlineDependencies: true,
