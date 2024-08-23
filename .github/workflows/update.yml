@@ -7,8 +7,6 @@ on:
       - package-lock.json
       - package.json
     
-  workflow_dispatch:
-
 jobs:
   update-css:
     if: github.actor == 'dependabot[bot]' && contains(github.event.pull_request.title, 'material-icon-theme')
