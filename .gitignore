@@ -2,7 +2,6 @@
 zip
 extension/
 !extension/logo.png
-dist
 
 # Logs
 
@@ -122,6 +121,7 @@ out
 # Nuxt.js build / generate output
 
 .nuxt
+dist
 
 # Gatsby files
 
