@@ -12,11 +12,12 @@ export default defineBuildConfig({
     'build:done': () => {
       fs.renameSync(r('dist/background.mjs'), r('dist/background.js'))
       fs.renameSync(r('dist/content.mjs'), r('dist/content.js'))
+      fs.copyFileSync(r('node_modules/webextension-polyfill/dist/browser-polyfill.js'), r('dist/browser-polyfill.js'))
     },
   },
   entries: [
-    'src/background.ts',
     'src/content.ts',
+    { input: 'src/browser.ts', name: 'background' },
     { input: 'extension/' },
   ],
   rollup: {

@@ -1,11 +1,3 @@
-import browser from 'webextension-polyfill'
-
-browser.runtime.onMessage.addListener((message) => {
-  if (message.action === 'updateIcons') {
-    applyUpdatedIcons()
-  }
-})
-
 async function applyUpdatedIcons() {
   const {
     css,
@@ -16,6 +8,9 @@ async function applyUpdatedIcons() {
     'materialIcons',
     'languageMap',
   ])
+
+  console.log('css', !!css)
+  console.log('languageMap', !!languageFileExtensions)
 
   let style = document.getElementById('github-material-icon-theme-style')
   if (!style) {

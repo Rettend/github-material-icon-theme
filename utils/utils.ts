@@ -22,8 +22,3 @@ export function log(name: string, ...messages: string[]): void {
   else
     console.log(name)
 }
-
-const BASE_URL = 'https://github-material-icon-theme.pages.dev'
-export const GET = (url: string) => fetch(`${BASE_URL}${url}`)
-
-export const hours = (n: number) => n * 60 * 60 * 1000

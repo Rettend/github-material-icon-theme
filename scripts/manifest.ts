@@ -20,7 +20,10 @@ export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
     content_scripts: [
       {
         matches: urls,
-        js: ['content.js'],
+        js: [
+          'browser-polyfill.js',
+          'content.js',
+        ],
       },
     ],
     background: {
@@ -39,7 +42,10 @@ export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
       },
     }
     manifest.background = {
-      scripts: ['background.js'],
+      scripts: [
+        'browser-polyfill.js',
+        'background.js',
+      ],
     }
   }
   else {
