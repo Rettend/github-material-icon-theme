@@ -10,13 +10,13 @@ export default defineBuildConfig({
       log(text)
     },
     'build:done': () => {
-      fs.renameSync(r('dist/index.mjs'), r('dist/index.js'))
+      fs.renameSync(r('dist/background.mjs'), r('dist/background.js'))
+      fs.renameSync(r('dist/content.mjs'), r('dist/content.js'))
     },
   },
   entries: [
     'src/background.ts',
     'src/content.ts',
-    { input: 'extension/' },
   ],
   rollup: {
     inlineDependencies: true,
