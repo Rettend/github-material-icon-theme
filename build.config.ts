@@ -14,7 +14,8 @@ export default defineBuildConfig({
     },
   },
   entries: [
-    'src/index.ts',
+    'src/background.ts',
+    'src/content.ts',
     { input: 'extension/' },
   ],
   rollup: {

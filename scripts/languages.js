@@ -11,7 +11,7 @@ import iconMap from 'material-icon-theme/dist/material-icons.json'
 import { r } from '../utils/utils'
 
 const vsDataPath = r('data')
-const srcPath = r('src')
+const outputPath = r('extension')
 
 let index = 0
 let total
@@ -33,7 +33,7 @@ const GITHUB_RATELIMIT = 6000
 async function main() {
   await fs.remove(vsDataPath)
   await fs.ensureDir(vsDataPath)
-  await fs.remove(path.resolve(srcPath, 'language-map.json'))
+  await fs.remove(path.resolve(outputPath, 'language-map.json'))
 
   console.log('[1/7] Querying Github API for official VSC language contributions.')
   queryLanguageContributions()
@@ -189,7 +189,7 @@ function mapLanguageContribution(lang) {
 async function generateLanguageMap() {
   console.log('[6/7] Writing language contribution map to icon configuration file.')
   fs.writeFileSync(
-    path.resolve(srcPath, 'language-map.json'),
+    path.resolve(outputPath, 'language-map.json'),
     `${stringify(languageMap, { space: '  ' })}\n`,
   )
   console.log('[7/7] Deleting language contribution cache.')

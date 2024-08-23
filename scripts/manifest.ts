@@ -16,7 +16,7 @@ export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
       48: './logo.png',
       128: './logo.png',
     },
-    permissions: [],
+    permissions: ['storage'],
     content_scripts: [
       {
         matches: urls,
@@ -24,6 +24,9 @@ export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
         css: ['style.css'],
       },
     ],
+    background: {
+      service_worker: 'background.js',
+    },
   }
 
   if (isFirefox) {
@@ -35,6 +38,9 @@ export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
         id: 'github@materialicontheme.com',
         strict_min_version: '48.0',
       },
+    }
+    manifest.background = {
+      scripts: ['background.js'],
     }
   }
   else {

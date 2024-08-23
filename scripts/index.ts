@@ -17,3 +17,6 @@ generateCSS(r('extension/style.css'))
 
 log('PRE', 'write version.txt')
 fs.writeFileSync(r('extension/version.txt'), devDependencies['material-icon-theme'])
+
+log('PRE', 'copy material-icons.json')
+fs.copyFileSync(r('node_modules/material-icon-theme/dist/material-icons.json'), r('extension/material-icons.json'))

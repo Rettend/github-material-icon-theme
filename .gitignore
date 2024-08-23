@@ -1,6 +1,7 @@
 # Based on https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
 zip
-extension/manifest.json
+extension/
+!extension/logo.png
 
 # Logs
 
