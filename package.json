@@ -38,6 +38,9 @@
     "typecheck": "tsc --noEmit",
     "release": "bumpp && bun run build && bun run bundle && bun run build:firefox && bun run bundle:firefox"
   },
+  "dependencies": {
+    "webextension-polyfill": "^0.12.0"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^2.27.1",
     "@iconify/utils": "^2.1.31",

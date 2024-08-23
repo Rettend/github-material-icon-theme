@@ -20,8 +20,7 @@ export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
     content_scripts: [
       {
         matches: urls,
-        js: ['index.js'],
-        css: ['style.css'],
+        js: ['content.js'],
       },
     ],
     background: {
@@ -50,12 +49,6 @@ export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
     manifest.content_security_policy = {
       extension_pages: 'script-src \'self\'; object-src \'self\'',
     }
-    manifest.web_accessible_resources = [
-      {
-        resources: ['style.css'],
-        matches: urls,
-      },
-    ]
   }
 
   return manifest
