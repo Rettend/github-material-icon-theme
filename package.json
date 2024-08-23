@@ -28,7 +28,7 @@
     "build:firefox": "FIREFOX=true bun --bun unbuild",
     "dev": "bun --bun unbuild --stub",
     "pre": "bun scripts/index.ts",
-    "get:css": "bun scripts/css.ts",
+    "update": "SKIP_MANIFEST=true bun scripts/index.ts",
     "get:languages": "bun scripts/languages.js",
     "bundle": "web-ext build --source-dir dist --artifacts-dir zip --overwrite-dest",
     "bundle:firefox": "web-ext build --source-dir dist --artifacts-dir zip/firefox --overwrite-dest",

@@ -14,11 +14,11 @@ export const logs = [
 
 export type Log = typeof logs[number]
 
-export function log(name: Log, message: string): void
+export function log(name: Log, ...messages: string[]): void
 export function log(name: string): void
-export function log(name: string, message?: string) {
-  if (message)
-    console.log(black(bgCyan(` ${name} `)), message)
+export function log(name: string, ...messages: string[]): void {
+  if (messages.length)
+    console.log(black(bgCyan(` ${name} `)), ...messages)
   else
     console.log(name)
 }

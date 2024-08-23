@@ -1,0 +1,46 @@
+name: Update CSS on material-icon-theme Change
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - package-lock.json
+      - package.json
+    
+  workflow_dispatch:
+
+jobs:
+  update-css:
+    if: github.actor == 'dependabot[bot]' && contains(github.event.pull_request.title, 'material-icon-theme')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun i
+
+      - name: Generate CSS
+        run: bun run update
+
+      - name: Commit CSS file
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Update Icons"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.head_ref }}
+
+      - name: Enable auto-merge
+        if: success()
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
