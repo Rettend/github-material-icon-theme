@@ -24,6 +24,9 @@ export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
           'browser-polyfill.js',
           'content.js',
         ],
+        css: [
+          'inject.css',
+        ],
       },
     ],
     background: {
@@ -55,6 +58,12 @@ export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
     manifest.content_security_policy = {
       extension_pages: 'script-src \'self\'; object-src \'self\'',
     }
+    manifest.web_accessible_resources = [
+      {
+        resources: ['inject.css'],
+        matches: urls,
+      },
+    ]
   }
 
   return manifest
