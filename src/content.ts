@@ -2,15 +2,12 @@ async function applyUpdatedIcons() {
   const {
     css,
     materialIcons: { fileExtensions, fileNames, folderNames, folderNamesExpanded, light },
-    languageMap: { languageFileExtensions },
+    languageMap,
   } = await browser.storage.local.get([
     'css',
     'materialIcons',
     'languageMap',
   ])
-
-  console.log('css', !!css)
-  console.log('languageMap', !!languageFileExtensions)
 
   let style = document.getElementById('github-material-icon-theme-style')
   if (!style) {
@@ -48,7 +45,7 @@ async function applyUpdatedIcons() {
       { key: longExtension, lookup: isLightMode ? light.fileExtensions : undefined },
       { key: longExtension, lookup: fileExtensions },
       { key: shortExtension, lookup: fileExtensions },
-      { key: shortExtension, lookup: languageFileExtensions },
+      { key: shortExtension, lookup: languageMap.fileExtensions },
     ]
 
     return getIconClass(pairs)
