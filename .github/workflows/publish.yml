@@ -1,0 +1,60 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+        
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: oven-sh/setup-bun@v1
+
+      - name: Install Dependencies
+        run: bun i
+
+      - name: Build Extension
+        run: bun run build && bun run bundle
+
+      - name: Get package version
+        run: echo "package_version=v$(jq -r .version package.json)" >> $GITHUB_ENV
+
+      - name: Upload to Chrome Store
+        continue-on-error: true
+        uses: trmcnvn/chrome-addon@v2
+        with:
+          extension: hlgcfologjgpkkkokemkclndckfbbphb
+          zip: zip/github-material-icon-theme-${{ env.package_version }}.zip
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+
+      - name: Upload to Edge Store
+        continue-on-error: true
+        uses: wdzeng/edge-addon@v1
+        with:
+          product-id: 6cc5fb3d-d986-4e04-afb6-1c1751618a5a
+          zip-path: zip/github-material-icon-theme-${{ env.package_version }}.zip
+          client-id: ${{ secrets.EDGE_CLIENT_ID }}
+          client-secret: ${{ secrets.EDGE_CLIENT_SECRET }}
+          access-token-url: ${{ secrets.EDGE_ACCESS_TOKEN_URL }}
+
+      - name: Build Extension for Firefox
+        run: bun run build:firefox
+          
+      - name: Upload to Firefox Store
+        continue-on-error: true
+        run: bun x web-ext sign -s ./dist/ --channel=listed --api-key=${{ secrets.FIREFOX_API_JWT_ISSUER }} --api-secret=${{ secrets.FIREFOX_API_JWT_SECRET }}
