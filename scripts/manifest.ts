@@ -41,7 +41,7 @@ export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
     manifest.browser_specific_settings = {
       gecko: {
         id: 'github@materialicontheme.com',
-        strict_min_version: '48.0',
+        strict_min_version: '58.0',
       },
     }
     manifest.background = {
