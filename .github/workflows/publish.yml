@@ -30,7 +30,7 @@ jobs:
         run: bun run build && bun run bundle
 
       - name: Get package version
-        run: echo "package_version=v$(jq -r .version package.json)" >> $GITHUB_ENV
+        run: echo "package_version=$(jq -r .version package.json)" >> $GITHUB_ENV
 
       - name: Upload to Chrome Store
         continue-on-error: true
@@ -53,8 +53,8 @@ jobs:
           access-token-url: ${{ secrets.EDGE_ACCESS_TOKEN_URL }}
 
       - name: Build Extension for Firefox
-        run: bun run build:firefox
-          
+        run: bun run build:firefox && bun run bundle:firefox
+
       - name: Upload to Firefox Store
         continue-on-error: true
         run: bun x web-ext sign -s ./dist/ --channel=listed --api-key=${{ secrets.FIREFOX_API_JWT_ISSUER }} --api-secret=${{ secrets.FIREFOX_API_JWT_SECRET }}
