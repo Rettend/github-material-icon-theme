@@ -6,7 +6,11 @@ on:
     paths:
       - package-lock.json
       - package.json
-    
+
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   update-css:
     if: github.actor == 'dependabot[bot]' && contains(github.event.pull_request.title, 'material-icon-theme')
