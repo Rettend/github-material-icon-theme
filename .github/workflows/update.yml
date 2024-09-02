@@ -8,7 +8,7 @@ on:
       - package.json
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
 
 jobs:
@@ -18,8 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref }}
           persist-credentials: false
           fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -40,7 +42,7 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.PAT_TOKEN }}
           branch: ${{ github.head_ref }}
 
       - name: Enable auto-merge

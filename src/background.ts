@@ -12,6 +12,7 @@ async function checkForUpdates() {
     const response = await GET('/version.txt')
     const latestVersion = await response.text()
     const { version: currentVersion } = await browser.storage.local.get('version')
+    console.log(currentVersion, latestVersion)
 
     if (latestVersion !== currentVersion) {
       const [css, materialIcons, languageMap] = await Promise.all([
