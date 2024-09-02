@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   update-css:
-    if: contains(github.event.pull_request.title, 'material-icon-theme')
+    if: github.actor == 'dependabot[bot]' && contains(github.event.pull_request.title, 'material-icon-theme')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
