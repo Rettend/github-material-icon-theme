@@ -11,7 +11,7 @@ import iconMap from 'material-icon-theme/dist/material-icons.json'
 import { r } from '../utils/utils'
 
 const vsDataPath = r('data')
-const outputPath = r('cloudflare')
+const outputPath = r('download')
 
 let index = 0
 let total

@@ -13,10 +13,10 @@ if (!skipManifest) {
 }
 
 log('PRE', 'generate css')
-generateCSS(r('cloudflare/style.css'))
+generateCSS(r('download/style.css'))
 
 log('PRE', 'write version.txt')
-fs.writeFileSync(r('cloudflare/version.txt'), devDependencies['material-icon-theme'])
+fs.writeFileSync(r('download/version.txt'), devDependencies['material-icon-theme'])
 
 log('PRE', 'copy material-icons.json')
-fs.copyFileSync(r('node_modules/material-icon-theme/dist/material-icons.json'), r('cloudflare/material-icons.json'))
+fs.copyFileSync(r('node_modules/material-icon-theme/dist/material-icons.json'), r('download/material-icons.json'))

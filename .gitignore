@@ -1,7 +1,5 @@
 # Based on https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
 zip
-cloudflare/
-!cloudflare/version.txt
 extension/manifest.json
 
 # Logs

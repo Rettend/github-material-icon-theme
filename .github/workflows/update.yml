@@ -32,6 +32,9 @@ jobs:
       - name: Generate CSS
         run: bun run update
 
+      - name: Generate Language Map
+        run: bun run get:languages
+
       - name: Commit CSS file
         run: |
           git config --local user.email "action@github.com"
