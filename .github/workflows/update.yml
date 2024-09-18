@@ -33,6 +33,8 @@ jobs:
         run: bun run update
 
       - name: Generate Language Map
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bun run get:languages
 
       - name: Commit CSS file

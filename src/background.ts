@@ -1,4 +1,4 @@
-const BASE_URL = 'https://github.com/Rettend/github-material-icon-theme/tree/main/download'
+const BASE_URL = 'https://rettend.github.io/github-material-icon-theme/download'
 const GET = (url: string) => fetch(`${BASE_URL}/${url}`)
 const hours = (n: number) => n * 60 * 60 * 1000
 
