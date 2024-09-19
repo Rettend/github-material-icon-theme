@@ -1,5 +1,7 @@
 # github-material-icon-theme
 
+[![](https://img.shields.io/chrome-web-store/v/hlgcfologjgpkkkokemkclndckfbbphb.svg)](https://chrome.google.com/webstore/detail/github-material-icon-them/hlgcfologjgpkkkokemkclndckfbbphb) [![](https://img.shields.io/amo/v/github-material-icon-theme.svg)](https://addons.mozilla.org/en-US/firefox/addon/github-material-icon-theme/) [![](https://img.shields.io/badge/dynamic/json?label=edge%20add-on&prefix=v&query=%24.version&url=https%3A%2F%2Fmicrosoftedge.microsoft.com%2Faddons%2Fgetproductdetailsbycrxid%2Fmladkedehngimbnkhcbjamaldmjcneaa)](https://microsoftedge.microsoft.com/addons/detail/githubmaterialiconthem/mladkedehngimbnkhcbjamaldmjcneaa)
+
 ![icons](/public/icons.png)
 
 This is a web extension that adds awesome icons to GitHub.
@@ -11,8 +13,6 @@ Supports both light and dark themes.
 Currently only supports GitHub.
 
 ## Download
-
-[![](https://img.shields.io/chrome-web-store/v/hlgcfologjgpkkkokemkclndckfbbphb.svg)](https://chrome.google.com/webstore/detail/github-material-icon-them/hlgcfologjgpkkkokemkclndckfbbphb) [![](https://img.shields.io/amo/v/github-material-icon-theme.svg)](https://addons.mozilla.org/en-US/firefox/addon/github-material-icon-theme/) [![](https://img.shields.io/badge/dynamic/json?label=edge%20add-on&prefix=v&query=%24.version&url=https%3A%2F%2Fmicrosoftedge.microsoft.com%2Faddons%2Fgetproductdetailsbycrxid%2Fmladkedehngimbnkhcbjamaldmjcneaa)](https://microsoftedge.microsoft.com/addons/detail/githubmaterialiconthem/mladkedehngimbnkhcbjamaldmjcneaa)
 
 ### Chromium
 
