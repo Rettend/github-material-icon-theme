@@ -32,12 +32,22 @@ jobs:
       - name: Get package version
         run: echo "package_version=$(jq -r .version package.json)" >> $GITHUB_ENV
 
+      # - name: Upload to Chrome Store
+      #   continue-on-error: true
+      #   uses: trmcnvn/chrome-addon@v2
+      #   with:
+      #     extension: hlgcfologjgpkkkokemkclndckfbbphb
+      #     zip: zip/github-material-icon-theme-${{ env.package_version }}.zip
+      #     client-id: ${{ secrets.CHROME_CLIENT_ID }}
+      #     client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+      #     refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+
       - name: Upload to Chrome Store
         continue-on-error: true
-        uses: trmcnvn/chrome-addon@v2
+        uses: mnao305/chrome-extension-upload@v5.0.0
         with:
-          extension: hlgcfologjgpkkkokemkclndckfbbphb
-          zip: zip/github-material-icon-theme-${{ env.package_version }}.zip
+          file-path: zip/github-material-icon-theme-${{ env.package_version }}.zip
+          extension-id: hlgcfologjgpkkkokemkclndckfbbphb
           client-id: ${{ secrets.CHROME_CLIENT_ID }}
           client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
           refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
