@@ -30,84 +30,112 @@ const query = {
 }
 const GITHUB_RATELIMIT = 6000
 
-async function main() {
-  await fs.remove(vsDataPath)
-  await fs.ensureDir(vsDataPath)
-  await fs.remove(path.resolve(outputPath, 'language-map.json'))
-
-  console.log('[1/7] Querying Github API for official VSC language contributions.')
-  queryLanguageContributions()
+const languageMap = {
+  fileExtensions: {},
+  fileNames: {},
 }
 
-main()
+async function main() {
+  try {
+    await fs.remove(vsDataPath)
+    await fs.ensureDir(vsDataPath)
+    await fs.remove(path.resolve(outputPath, 'language-map.json'))
+
+    console.log('[1/7] Querying Github API for official VSC language contributions.')
+    await queryLanguageContributions()
+  }
+  catch (error) {
+    console.error('An error occurred:', error)
+    process.exit(1)
+  }
+}
 
 async function queryLanguageContributions() {
-  const res = await octokit.request('GET /search/code', query)
-  if (!res.data)
-    throw new Error('Couldn\'t fetch Microsoft language contributions from Github.')
-  query.page = index
-  index += 1
-  if (!total)
-    total = res.data.total_count
-  items.push(...res.data.items)
-  if (resultsPerPage * index >= total) {
-    console.log('[2/7] Fetching Microsoft language contributions from Github.')
-    index = 0
-    total = items.length
-    items.forEach(fetchLanguageContribution)
+  try {
+    const res = await octokit.request('GET /search/code', query)
+    if (!res.data)
+      throw new Error('Couldn\'t fetch Microsoft language contributions from Github.')
+    query.page = index
+    index += 1
+    if (!total)
+      total = res.data.total_count
+    items.push(...res.data.items)
+    if (resultsPerPage * index >= total) {
+      console.log('[2/7] Fetching Microsoft language contributions from Github.')
+      index = 0
+      total = items.length
+      for (const item of items) {
+        await fetchLanguageContribution(item)
+      }
+      await processLanguageContributions()
+    }
+    else {
+      setTimeout(queryLanguageContributions, GITHUB_RATELIMIT)
+    }
   }
-  else {
-    setTimeout(queryLanguageContributions, GITHUB_RATELIMIT)
+  catch (error) {
+    console.error('Error in queryLanguageContributions:', error)
+    throw error
   }
 }
 
 async function fetchLanguageContribution(item) {
-  const rawUrl = item.html_url.replace('/blob/', '/raw/')
-  const resPath = item.path.replace(/[^/]+$/, 'extension.json')
-  const extPath = path.join(vsDataPath, resPath)
-  let extManifest
   try {
-    extManifest = await fetch(rawUrl)
+    const rawUrl = item.html_url.replace('/blob/', '/raw/')
+    const resPath = item.path.replace(/[^/]+$/, 'extension.json')
+    const extPath = path.join(vsDataPath, resPath)
+    let extManifest = await fetch(rawUrl)
     extManifest = await extManifest.text()
-  }
-  catch (reason) {
-    throw new Error(reason)
-  }
-  try {
     await fs.ensureDir(path.dirname(extPath))
     await fs.writeFile(extPath, extManifest, 'utf-8')
+    items[index] = [extPath, extManifest]
+    index += 1
   }
-  catch (reason) {
-    throw new Error(`${reason} (${extPath})`)
+  catch (error) {
+    console.error('Error in fetchLanguageContribution:', error)
+    throw error
   }
-  items[index] = [extPath, extManifest]
-  index += 1
-  if (index === total) {
+}
+
+async function processLanguageContributions() {
+  try {
     console.log('[3/7] Loading VSC language contributions into Node.')
     index = 0
-    items.forEach(loadLanguageContribution)
+    for (const item of items) {
+      loadLanguageContribution(item)
+    }
+    console.log('[4/7] Processing language contributions for VSC File Icon API compatibility.')
+    index = 0
+    total = contributions.length
+    for (const contribution of contributions) {
+      processLanguageContribution(contribution)
+    }
+    console.log('[5/7] Mapping language contributions into file icon configuration.')
+    index = 0
+    total = languages.length
+    for (const lang of languages) {
+      mapLanguageContribution(lang)
+    }
+    await generateLanguageMap()
+  }
+  catch (error) {
+    console.error('Error in processLanguageContributions:', error)
+    throw error
   }
 }
 
 function loadLanguageContribution([extPath, extManifest]) {
-  let data
   try {
-    data = JSON.parse(extManifest.replace(/#\w[\dA-Z]*_\w+#/gi, '0'))
+    const data = JSON.parse(extManifest.replace(/#\w[\dA-Z]*_\w+#/gi, '0'))
+    if (!data.contributes || !data.contributes.languages) {
+      total -= 1
+      return
+    }
+    contributions.push(...data.contributes.languages)
+    index += 1
   }
   catch (error) {
-    throw new Error(`${error} (${extPath})`)
-  }
-  if (!data.contributes || !data.contributes.languages) {
-    total -= 1
-    return
-  }
-  contributions.push(...data.contributes.languages)
-  index += 1
-  if (index === total) {
-    console.log('[4/7] Processing language contributions for VSC File Icon API compatibility.')
-    index = 0
-    total = contributions.length
-    contributions.forEach(processLanguageContribution)
+    console.error(`Error parsing ${extPath}:`, error)
   }
 }
 
@@ -142,17 +170,7 @@ function processLanguageContribution(contribution) {
     languages.push({ id, extensions, filenames })
   }
   index += 1
-  if (index === total) {
-    console.log('[5/7] Mapping language contributions into file icon configuration.')
-    index = 0
-    total = languages.length
-    languages.forEach(mapLanguageContribution)
-  }
 }
-
-const languageMap = {}
-languageMap.fileExtensions = {}
-languageMap.fileNames = {}
 
 function mapLanguageContribution(lang) {
   const langIcon = iconMap.languageIds[lang.id]
@@ -179,19 +197,27 @@ function mapLanguageContribution(lang) {
       languageMap.fileNames[name] = iconName
     }
   })
-
   index += 1
-
-  if (index === total)
-    generateLanguageMap()
 }
 
 async function generateLanguageMap() {
-  console.log('[6/7] Writing language contribution map to icon configuration file.')
-  fs.writeFileSync(
-    path.resolve(outputPath, 'language-map.json'),
-    `${stringify(languageMap, { space: '  ' })}\n`,
-  )
-  console.log('[7/7] Deleting language contribution cache.')
-  await fs.remove(vsDataPath)
+  try {
+    console.log('[6/7] Writing language contribution map to icon configuration file.')
+    await fs.writeFile(
+      path.resolve(outputPath, 'language-map.json'),
+      `${stringify(languageMap, { space: '  ' })}\n`,
+    )
+    console.log('[7/7] Deleting language contribution cache.')
+    await fs.remove(vsDataPath)
+    console.log('Script completed successfully.')
+  }
+  catch (error) {
+    console.error('Error in generateLanguageMap:', error)
+    throw error
+  }
 }
+
+main().catch((error) => {
+  console.error('Unhandled error:', error)
+  process.exit(1)
+})
