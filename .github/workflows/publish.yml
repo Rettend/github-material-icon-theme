@@ -32,19 +32,6 @@ jobs:
 
       - name: Get package version
         run: echo "package_version=$(jq -r .version package.json)" >> $GITHUB_ENV
-
-      # - name: Upload to Chrome Store
-      #   continue-on-error: true
-      #   uses: trmcnvn/chrome-addon@v2
-      #   with:
-      #     extension: hlgcfologjgpkkkokemkclndckfbbphb
-      #     zip: zip/github-material-icon-theme-${{ env.package_version }}.zip
-      #     client-id: ${{ secrets.CHROME_CLIENT_ID }}
-      #     client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
-      #     refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
-
-      - name: Check if ZIP exists
-        run: ls -la zip/github-material-icon-theme-${{ env.package_version }}.zip
       
       - name: Upload to Chrome Store
         continue-on-error: true
@@ -56,19 +43,19 @@ jobs:
           client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
           refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
 
-      # - name: Upload to Edge Store
-      #   continue-on-error: true
-      #   uses: wdzeng/edge-addon@v1
-      #   with:
-      #     product-id: 6cc5fb3d-d986-4e04-afb6-1c1751618a5a
-      #     zip-path: zip/github-material-icon-theme-${{ env.package_version }}.zip
-      #     client-id: ${{ secrets.EDGE_CLIENT_ID }}
-      #     client-secret: ${{ secrets.EDGE_CLIENT_SECRET }}
-      #     access-token-url: ${{ secrets.EDGE_ACCESS_TOKEN_URL }}
+      - name: Upload to Edge Store
+        continue-on-error: true
+        uses: wdzeng/edge-addon@v1
+        with:
+          product-id: 6cc5fb3d-d986-4e04-afb6-1c1751618a5a
+          zip-path: zip/github-material-icon-theme-${{ env.package_version }}.zip
+          client-id: ${{ secrets.EDGE_CLIENT_ID }}
+          client-secret: ${{ secrets.EDGE_CLIENT_SECRET }}
+          access-token-url: ${{ secrets.EDGE_ACCESS_TOKEN_URL }}
 
-      # - name: Build Extension for Firefox
-      #   run: bun run build:firefox && bun run bundle:firefox
+      - name: Build Extension for Firefox
+        run: bun run build:firefox && bun run bundle:firefox
 
-      # - name: Upload to Firefox Store
-      #   continue-on-error: true
-      #   run: bun x web-ext sign -s ./dist/ --channel=listed --api-key=${{ secrets.FIREFOX_API_JWT_ISSUER }} --api-secret=${{ secrets.FIREFOX_API_JWT_SECRET }}
+      - name: Upload to Firefox Store
+        continue-on-error: true
+        run: bun x web-ext sign -s ./dist/ --channel=listed --api-key=${{ secrets.FIREFOX_API_JWT_ISSUER }} --api-secret=${{ secrets.FIREFOX_API_JWT_SECRET }}
