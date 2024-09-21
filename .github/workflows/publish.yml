@@ -43,6 +43,9 @@ jobs:
       #     client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
       #     refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
 
+      - name: Check if ZIP exists
+        run: ls -la zip/github-material-icon-theme-${{ env.package_version }}.zip
+      
       - name: Upload to Chrome Store
         continue-on-error: true
         uses: mnao305/chrome-extension-upload@v5.0.0
