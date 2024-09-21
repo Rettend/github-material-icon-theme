@@ -9,13 +9,11 @@ if (typeof browser === 'undefined') {
   globalThis.browser = chrome
 }
 
-async function checkForUpdates() {
+async function checkForUpdates(): Promise<{ updated: boolean, version?: string }> {
   try {
     const response = await GET('version.txt')
     const latestVersion = await response.text()
     const { version: currentVersion } = await browser.storage.local.get('version')
-    // eslint-disable-next-line no-console
-    console.log('previous:', currentVersion, 'latest:', latestVersion)
 
     if (latestVersion !== currentVersion) {
       const [css, materialIcons, languageMap] = await Promise.all([
@@ -30,18 +28,23 @@ async function checkForUpdates() {
         materialIcons,
         languageMap,
       })
+
+      return { updated: true, version: latestVersion }
     }
+
+    return { updated: false }
   }
   catch (error) {
     console.error('Failed to check for updates:', error)
+    throw error
   }
 }
 
 browser.runtime.onMessage.addListener((message, _sender, sendResponse: (response: any) => void) => {
   if (message.action === 'updateIcons') {
     checkForUpdates()
-      .then(() => {
-        sendResponse({ success: true })
+      .then((result) => {
+        sendResponse({ success: true, ...result })
       })
       .catch(() => {
         sendResponse({ success: false })
@@ -50,6 +53,6 @@ browser.runtime.onMessage.addListener((message, _sender, sendResponse: (response
   }
 })
 
-browser.runtime.onInstalled.addListener(checkForUpdates)
-browser.runtime.onStartup.addListener(checkForUpdates)
-setInterval(checkForUpdates, hours(24))
+browser.runtime.onInstalled.addListener(() => checkForUpdates())
+browser.runtime.onStartup.addListener(() => checkForUpdates())
+setInterval(() => checkForUpdates(), hours(24))

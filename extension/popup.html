@@ -9,18 +9,19 @@
             width: 200px;
             padding: 10px;
             font-family: Arial, sans-serif;
+            position: relative;
         }
         button {
             width: 100%;
             padding: 10px;
-            background-color: #4CAF50;
+            background-color: #204da8;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #2858b8;
         }
         button:disabled {
             background-color: #cccccc;
@@ -30,11 +31,18 @@
             margin-top: 10px;
             text-align: center;
         }
+        #versionNumber {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            color: #999;
+        }
     </style>
 </head>
 <body>
     <button id="updateButton">Update Icons</button>
     <p id="feedbackMessage"></p>
+    <div id="versionNumber"></div>
     <script type="module" src="popup.js"></script>
 </body>
 </html>
