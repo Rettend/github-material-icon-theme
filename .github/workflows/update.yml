@@ -10,6 +10,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  checks: write
 
 jobs:
   update-css:
@@ -40,7 +41,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
-          git commit -m "Update Icons"
+          git commit -m "🤖 chore: update icons beep boop"
 
       - name: Push changes
         uses: ad-m/github-push-action@master
@@ -50,7 +51,9 @@ jobs:
 
       - name: Enable auto-merge
         if: success()
-        run: gh pr merge --auto --merge "$PR_URL"
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

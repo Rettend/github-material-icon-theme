@@ -1,3 +1,5 @@
+import 'webextension-polyfill'
+
 const BASE_URL = 'https://rettend.github.io/github-material-icon-theme/download'
 const GET = (url: string) => fetch(`${BASE_URL}/${url}`)
 const hours = (n: number) => n * 60 * 60 * 1000
@@ -12,7 +14,8 @@ async function checkForUpdates() {
     const response = await GET('version.txt')
     const latestVersion = await response.text()
     const { version: currentVersion } = await browser.storage.local.get('version')
-    console.log(currentVersion, latestVersion)
+    // eslint-disable-next-line no-console
+    console.log('previous:', currentVersion, 'latest:', latestVersion)
 
     if (latestVersion !== currentVersion) {
       const [css, materialIcons, languageMap] = await Promise.all([
@@ -33,6 +36,19 @@ async function checkForUpdates() {
     console.error('Failed to check for updates:', error)
   }
 }
+
+browser.runtime.onMessage.addListener((message, _sender, sendResponse: (response: any) => void) => {
+  if (message.action === 'updateIcons') {
+    checkForUpdates()
+      .then(() => {
+        sendResponse({ success: true })
+      })
+      .catch(() => {
+        sendResponse({ success: false })
+      })
+    return true // This is important!
+  }
+})
 
 browser.runtime.onInstalled.addListener(checkForUpdates)
 browser.runtime.onStartup.addListener(checkForUpdates)

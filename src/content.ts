@@ -1,3 +1,8 @@
+if (typeof browser === 'undefined') {
+  // @ts-expect-error build time
+  globalThis.browser = chrome
+}
+
 async function applyUpdatedIcons() {
   const {
     css,

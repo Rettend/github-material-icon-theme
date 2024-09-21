@@ -37,6 +37,7 @@ export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
   if (isFirefox) {
     manifest.browser_action = {
       default_icon: './logo.png',
+      default_popup: 'popup.html',
     }
     manifest.browser_specific_settings = {
       gecko: {
@@ -54,6 +55,7 @@ export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
   else {
     manifest.action = {
       default_icon: './logo.png',
+      default_popup: 'popup.html',
     }
     manifest.content_security_policy = {
       extension_pages: 'script-src \'self\'; object-src \'self\'',

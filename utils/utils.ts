@@ -4,7 +4,7 @@ import process from 'node:process'
 import { bgCyan, black } from 'kolorist'
 
 const cwd = process.env.INIT_CWD || process.cwd()
-export const r = (file: string) => path.join(cwd, file)
+export const r = (...files: string[]) => path.join(cwd, ...files)
 
 export const logs = [
   'PRE',
