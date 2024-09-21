@@ -27,8 +27,10 @@ jobs:
       - name: Install Dependencies
         run: bun i
 
-      - name: Build Extension
-        run: bun run build && bun run bundle
+      - name: Build and Bundle Extension
+        run: |
+          bun run build
+          bun run bundle
 
       - name: Get package version
         run: echo "package_version=$(jq -r .version package.json)" >> $GITHUB_ENV
@@ -54,7 +56,9 @@ jobs:
           access-token-url: ${{ secrets.EDGE_ACCESS_TOKEN_URL }}
 
       - name: Build Extension for Firefox
-        run: bun run build:firefox && bun run bundle:firefox
+        run: |
+          bun run build:firefox
+          bun run bundle:firefox
 
       - name: Upload to Firefox Store
         continue-on-error: true
