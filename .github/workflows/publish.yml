@@ -34,7 +34,7 @@ jobs:
 
       - name: Get package version
         run: echo "package_version=$(jq -r .version package.json)" >> $GITHUB_ENV
-      
+
       - name: Upload to Chrome Store
         continue-on-error: true
         uses: mnao305/chrome-extension-upload@v5.0.0
