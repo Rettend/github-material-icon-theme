@@ -166,6 +166,7 @@
     "vsh": "shader",
     "vuerc": "json",
     "webmanifest": "json",
+    "winget": "yaml",
     "workbook": "markdown",
     "wsdl": "xml",
     "wxi": "xml",
