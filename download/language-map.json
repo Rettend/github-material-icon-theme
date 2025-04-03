@@ -231,6 +231,7 @@
     "keybindings.json": "json",
     "launch.json": "json",
     "matchfile": "ruby",
+    "mcp.json": "json",
     "podfile": "ruby",
     "profiles.json": "json",
     "puppetfile": "ruby",
