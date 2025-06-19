@@ -1,6 +1,7 @@
 .react-directory-filename-column>svg,
 .PRIVATE_TreeView-directory-icon>svg,
 .PRIVATE_TreeView-item-visual>svg,
+.ActionList-item-visual--leading > svg,
 #folder-row-0 svg {
   background-size: 100% 100%;
   background-color: transparent;

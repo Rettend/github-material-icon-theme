@@ -76,6 +76,8 @@ async function applyUpdatedIcons() {
   const processedMainFileNames: Set<Element> = new Set()
   const processedTreeFileNames: Set<Element> = new Set()
   const processedTreeFolders: Map<Element, boolean> = new Map()
+  const processedActionListFileNames: Set<Element> = new Set()
+  const processedActionListFolders: Map<Element, boolean> = new Map()
 
   type SvgFn = (element: Element) => SVGSVGElement | null | undefined
 
@@ -98,7 +100,8 @@ async function applyUpdatedIcons() {
       else
         iconClass = getFileClass(fileName) || 'ICON_file'
 
-      svgElement?.classList.add(iconClass)
+      if (iconClass)
+        svgElement?.classList.add(iconClass)
 
       processedFileNames.add(fileNameElement)
     })
@@ -116,6 +119,41 @@ async function applyUpdatedIcons() {
         return
 
       const folderName = folderNameElement.textContent ?? undefined
+      const iconClass = getFolderClass(folderName, isOpen) || (isOpen ? 'ICON_folder-open' : 'ICON_folder')
+
+      if (iconClass)
+        svgElement?.classList.add(iconClass)
+
+      processedFolderNames.set(folderNameElement, isOpen)
+    })
+  }
+
+  function processActionListFileNames(fileNames: NodeListOf<Element>, processedFileNames: Set<Element>, svgFn: SvgFn) {
+    fileNames.forEach((fileNameElement) => {
+      if (processedFileNames.has(fileNameElement))
+        return
+
+      const fileName = fileNameElement.textContent?.trim() ?? undefined
+      const svgElement = svgFn(fileNameElement)
+      const iconClass = getFileClass(fileName) || 'ICON_file'
+
+      if (iconClass)
+        svgElement?.classList.add(iconClass)
+
+      processedFileNames.add(fileNameElement)
+    })
+  }
+
+  function processActionListFolderNames(folderNames: NodeListOf<Element>, processedFolderNames: Map<Element, boolean>, svgFn: SvgFn) {
+    folderNames.forEach((folderNameElement) => {
+      const button = folderNameElement.closest('button.ActionList-content')
+      const isOpen = button?.getAttribute('aria-expanded') === 'true'
+
+      if (processedFolderNames.has(folderNameElement) && isOpen === processedFolderNames.get(folderNameElement))
+        return
+
+      const svgElement = svgFn(folderNameElement)
+      const folderName = folderNameElement.textContent?.trim() ?? undefined
       const iconClass = getFolderClass(folderName, isOpen) || (isOpen ? 'ICON_folder-open' : 'ICON_folder')
 
       if (iconClass)
@@ -150,12 +188,24 @@ async function applyUpdatedIcons() {
         ?.querySelector('svg')
     processFolderNames(treeFolderNames, processedTreeFolders, treeFolderSvgFn)
 
-    const treeFileNames = document.querySelectorAll('span.PRIVATE_TreeView-item-content-text span')
+    const treeFileNames = document.querySelectorAll('span.PRIVATE_TreeView-item-content-text a, span.PRIVATE_TreeView-item-content-text span')
     const treeSvgFn: SvgFn = element =>
       element.closest('div.PRIVATE_TreeView-item-content')
         ?.querySelector('div.PRIVATE_TreeView-item-visual')
         ?.querySelector('svg')
     processFileNames(treeFileNames, processedTreeFileNames, treeSvgFn, processedTreeFolders)
+
+    const actionListFolderNames = document.querySelectorAll('li[data-tree-entry-type="directory"] .ActionList-item-label')
+    const actionListFolderSvgFn: SvgFn = element =>
+      element.closest('.ActionList-content')
+        ?.querySelector('.ActionList-item-visual--leading svg')
+    processActionListFolderNames(actionListFolderNames, processedActionListFolders, actionListFolderSvgFn)
+
+    const actionListFileNames = document.querySelectorAll('li[data-tree-entry-type="file"] .ActionList-item-label')
+    const actionListFileSvgFn: SvgFn = element =>
+      element.closest('.ActionList-content')
+        ?.querySelector('.ActionList-item-visual--leading svg')
+    processActionListFileNames(actionListFileNames, processedActionListFileNames, actionListFileSvgFn)
   }
 
   const observer = new MutationObserver(callback)
