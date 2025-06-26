@@ -12,9 +12,9 @@ export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
     version,
     description,
     icons: {
-      16: './logo.png',
-      48: './logo.png',
-      128: './logo.png',
+      16: 'logo.png',
+      48: 'logo.png',
+      128: 'logo.png',
     },
     permissions: ['storage'],
     content_scripts: [
@@ -36,7 +36,7 @@ export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
 
   if (isFirefox) {
     manifest.browser_action = {
-      default_icon: './logo.png',
+      default_icon: 'logo.png',
       default_popup: 'popup.html',
     }
     manifest.browser_specific_settings = {
@@ -54,7 +54,7 @@ export function getManifest(isFirefox: boolean): Manifest.WebExtensionManifest {
   }
   else {
     manifest.action = {
-      default_icon: './logo.png',
+      default_icon: 'logo.png',
       default_popup: 'popup.html',
     }
     manifest.content_security_policy = {

@@ -195,13 +195,13 @@ async function applyUpdatedIcons() {
         ?.querySelector('svg')
     processFileNames(treeFileNames, processedTreeFileNames, treeSvgFn, processedTreeFolders)
 
-    const actionListFolderNames = document.querySelectorAll('li[data-tree-entry-type="directory"] .ActionList-item-label')
+    const actionListFolderNames = document.querySelectorAll('li[data-tree-entry-type="directory"] > .ActionList-content .ActionList-item-label')
     const actionListFolderSvgFn: SvgFn = element =>
       element.closest('.ActionList-content')
         ?.querySelector('.ActionList-item-visual--leading svg')
     processActionListFolderNames(actionListFolderNames, processedActionListFolders, actionListFolderSvgFn)
 
-    const actionListFileNames = document.querySelectorAll('li[data-tree-entry-type="file"] .ActionList-item-label')
+    const actionListFileNames = document.querySelectorAll('li[data-tree-entry-type="file"] > .ActionList-content .ActionList-item-label')
     const actionListFileSvgFn: SvgFn = element =>
       element.closest('.ActionList-content')
         ?.querySelector('.ActionList-item-visual--leading svg')
