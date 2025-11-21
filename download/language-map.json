@@ -27,7 +27,6 @@
     "cls": "tex",
     "color-theme.json": "json",
     "compute": "shader",
-    "cppm": "cpp",
     "cpy": "python",
     "cshrc": "console",
     "csl": "xml",
